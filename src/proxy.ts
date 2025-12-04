@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getAuthToken } from "./utils";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const authToken = getAuthToken();
   const isLoggedIn = authToken || false;
 
