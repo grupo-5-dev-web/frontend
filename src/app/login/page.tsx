@@ -25,6 +25,7 @@ export default function LoginPage() {
     // TODO: Simulação de login, validar com backend
     if (email && password) {
       // TODO: Login bem-sucedido
+      router.push("/users");
     }
   };
 
