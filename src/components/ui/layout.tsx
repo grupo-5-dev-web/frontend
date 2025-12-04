@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
+import { removeAuthToken } from "@/utils";
+
 import { Button } from "./button";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -10,6 +12,7 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const activePath = pathname.split("/")[1];
 
   const handleLogout = () => {
+    removeAuthToken();
     router.push("/login");
   };
 
@@ -26,6 +29,16 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
                 <span className="text-gray-900">Resource Manager</span>
               </div>
               <div className="flex items-center gap-1">
+                <Button
+                  onClick={() => router.push("/")}
+                  className={`px-4 py-2 rounded-md transition-colors ${
+                    activePath === ""
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Dashboard
+                </Button>
                 <Button
                   onClick={() => router.push("/users")}
                   className={`px-4 py-2 rounded-md transition-colors ${

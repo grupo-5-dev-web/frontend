@@ -7,12 +7,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/card";
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
-import { Label } from "@/components/label";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { LogIn } from "lucide-react";
+
 import { useRouter } from "next/navigation";
+import { setAuthToken } from "@/utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,7 +27,8 @@ export default function LoginPage() {
     // TODO: Simulação de login, validar com backend
     if (email && password) {
       // TODO: Login bem-sucedido
-      router.push("/users");
+      setAuthToken(email);
+      router.push("/");
     }
   };
 

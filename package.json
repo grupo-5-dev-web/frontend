@@ -11,9 +11,9 @@
     "url": "git@github.com:grupo-5-dev-web/frontend.git"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_ENV=development next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "cross-env NODE_ENV=production next start",
     "lint": "eslint"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.554.0",
     "next": "16.0.3",
     "react": "19.2.0",
@@ -38,10 +39,12 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.22",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "eslint-plugin-react-hooks": "^7.0.1",
