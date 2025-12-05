@@ -11,10 +11,6 @@ const setAuthToken = (token: string) => {
   });
 };
 
-const getAuthToken = () => {
-  return Cookies.get("authToken");
-};
-
 const removeAuthToken = () => {
   Cookies.remove("authToken", {
     path: "/",
@@ -23,4 +19,4 @@ const removeAuthToken = () => {
   });
 };
 
-export { setAuthToken, getAuthToken, removeAuthToken };
+export { setAuthToken, removeAuthToken };
