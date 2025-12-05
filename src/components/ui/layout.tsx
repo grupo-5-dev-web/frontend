@@ -49,6 +49,16 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
                 >
                   Usuários
                 </Button>
+                <Button
+                  onClick={() => router.push("/resources")}
+                  className={`px-4 py-2 rounded-md transition-colors ${
+                    activePath === "resources"
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Recursos
+                </Button>
               </div>
             </div>
             <Button
