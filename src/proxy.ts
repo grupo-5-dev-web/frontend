@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAuthToken } from "./utils";
 
 export function proxy(request: NextRequest) {
-  const authToken = getAuthToken();
+  const authToken = request.cookies.get("authToken")?.value;
   const isLoggedIn = authToken || false;
 
   // Rotas públicas, não precisam de autenticação
@@ -11,8 +10,8 @@ export function proxy(request: NextRequest) {
     request.nextUrl.pathname === "/login" ||
     request.nextUrl.pathname === "/register";
 
-  // Se não estiver logado e tentar acessar uma rota protegida, redirecionar para login
-  if (!isLoggedIn && !isPublicPath) {
+  // Se não estiver logado e tentar acessar uma das rotas do matcher, redirecionar para login
+  if (!isLoggedIn) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -25,5 +24,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/users"],
+  matcher: ["/", "/login", "/register", "/users", "/resources"],
 };
