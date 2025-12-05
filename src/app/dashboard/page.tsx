@@ -5,12 +5,20 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AddUserModal } from "@/components/custom/AddUserModal";
+import { AddResourceModal } from "@/components/custom/AddResourceModal";
 
 interface User {
   id: string;
   name: string;
   email: string;
   password: string;
+}
+
+interface Resource {
+  id: string;
+  name: string;
+  type: string;
+  quantity: number;
 }
 
 interface Booking {
@@ -21,8 +29,8 @@ interface Booking {
 }
 
 export default function Dashboard() {
-  const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -46,6 +54,12 @@ export default function Dashboard() {
       email: "ana.costa@email.com",
       password: "senha123",
     },
+  ]);
+
+  const [resources, setResources] = useState<Resource[]>([
+    { id: "1", name: "Sala de Reunião A", type: "sala", quantity: 1 },
+    { id: "2", name: "Projetor Multimídia", type: "equipamento", quantity: 3 },
+    { id: "3", name: "Notebook Dell XPS", type: "equipamento", quantity: 5 },
   ]);
 
   const bookings: Booking[] = [
@@ -140,6 +154,15 @@ export default function Dashboard() {
   }) => {
     setUsers([...users, { id: crypto.randomUUID(), ...newUser }]);
     setIsUserModalOpen(false);
+  };
+
+  const handleAddResource = (newResource: {
+    name: string;
+    type: string;
+    quantity: number;
+  }) => {
+    setResources([...resources, { id: crypto.randomUUID(), ...newResource }]);
+    setIsResourceModalOpen(false);
   };
 
   return (
@@ -343,6 +366,12 @@ export default function Dashboard() {
         open={isUserModalOpen}
         onOpenChange={setIsUserModalOpen}
         onAddUser={handleAddUser}
+      />
+
+      <AddResourceModal
+        open={isResourceModalOpen}
+        onOpenChange={setIsResourceModalOpen}
+        onAddResource={handleAddResource}
       />
     </>
   );
