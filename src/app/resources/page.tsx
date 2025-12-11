@@ -67,10 +67,7 @@ export default function ResourcesPage() {
               Gerencie todos os recursos disponíveis
             </p>
           </div>
-          <Button
-            onClick={() => setIsResourceModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-          >
+          <Button onClick={() => setIsResourceModalOpen(true)}>
             Adicionar Recurso
           </Button>
         </div>
@@ -82,10 +79,7 @@ export default function ResourcesPage() {
             >
               <div className="p-6 border-b border-gray-200 flex items-center justify-between">
                 <h3 className="text-lg">{resource.name}</h3>
-                <Button
-                  onClick={() => handleEditResource(resource)}
-                  className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                >
+                <Button onClick={() => handleEditResource(resource)}>
                   <Pencil className="h-4 w-4" />
                 </Button>
               </div>

@@ -87,20 +87,16 @@ export default function RegisterPage() {
               <p className="text-xs text-gray-500">Mínimo de 6 caracteres</p>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full mt-8">
               <UserPlus className="w-4 h-4 mr-2" />
               Cadastrar
             </Button>
 
-            <div className="text-center text-sm">
+            <div className="flex items-center justify-center text-sm">
               <span className="text-gray-600">Já tem uma conta? </span>
-              <button
-                type="button"
-                onClick={onNavigateToLogin}
-                className="text-purple-600 hover:underline"
-              >
+              <Button type="button" variant="link" onClick={onNavigateToLogin}>
                 Faça login
-              </button>
+              </Button>
             </div>
           </form>
         </CardContent>

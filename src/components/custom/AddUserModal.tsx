@@ -22,7 +22,11 @@ interface AddUserModalProps {
   onAddUser: (user: { name: string; email: string; password: string }) => void;
 }
 
-const AddUserModal = ({ open, onOpenChange, onAddUser }: AddUserModalProps) => {
+const AddUserModal: React.FC<AddUserModalProps> = ({
+  open,
+  onOpenChange,
+  onAddUser,
+}) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

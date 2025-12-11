@@ -32,11 +32,11 @@ interface AddResourceModalProps {
   }) => void;
 }
 
-const AddResourceModal = ({
+const AddResourceModal: React.FC<AddResourceModalProps> = ({
   open,
   onOpenChange,
   onAddResource,
-}: AddResourceModalProps) => {
+}) => {
   const [resourceName, setResourceName] = useState("");
   const [resourceType, setResourceType] = useState("");
   const [resourceQuantity, setResourceQuantity] = useState(0);
