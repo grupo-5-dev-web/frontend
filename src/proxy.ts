@@ -11,7 +11,7 @@ export function proxy(request: NextRequest) {
     request.nextUrl.pathname === "/register";
 
   // Se não estiver logado e tentar acessar uma das rotas do matcher, redirecionar para login
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isPublicPath) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
