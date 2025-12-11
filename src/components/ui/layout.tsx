@@ -28,43 +28,28 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
                 </div>
                 <span className="text-gray-900">Resource Manager</span>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-4">
                 <Button
+                  variant={activePath === "" ? "default" : "ghost"}
                   onClick={() => router.push("/")}
-                  className={`px-4 py-2 rounded-md transition-colors ${
-                    activePath === ""
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
                 >
                   Dashboard
                 </Button>
                 <Button
+                  variant={activePath === "users" ? "default" : "ghost"}
                   onClick={() => router.push("/users")}
-                  className={`px-4 py-2 rounded-md transition-colors ${
-                    activePath === "users"
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
                 >
                   Usuários
                 </Button>
                 <Button
+                  variant={activePath === "resources" ? "default" : "ghost"}
                   onClick={() => router.push("/resources")}
-                  className={`px-4 py-2 rounded-md transition-colors ${
-                    activePath === "resources"
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
                 >
                   Recursos
                 </Button>
               </div>
             </div>
-            <Button
-              onClick={handleLogout}
-              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
+            <Button variant="ghost" onClick={handleLogout}>
               Logout
             </Button>
           </div>

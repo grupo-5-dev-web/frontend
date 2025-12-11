@@ -69,10 +69,7 @@ export default function UsersPage() {
             </p>
           </div>
 
-          <Button
-            onClick={() => setIsUserModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-          >
+          <Button onClick={() => setIsUserModalOpen(true)}>
             Adicionar Usuário
           </Button>
         </div>
