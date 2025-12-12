@@ -1,108 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { AddUserModal } from "@/components/custom/AddUserModal";
-import { AddResourceModal } from "@/components/custom/AddResourceModal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DatePicker } from "@/components/custom/DatePicker";
+import { Toast } from "@/components/ui/toast";
+import { BookResourceModal } from "@/components/custom/BookResourceModal";
+import { Booking as BookingItem } from "@/components/custom/Booking";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface Resource {
-  id: string;
-  name: string;
-  type: string;
-  quantity: number;
-}
-
-interface Booking {
-  id: string;
-  userName: string;
-  time: string;
-  resourceName: string;
-}
+import { Booking, create as createBooking } from "@/api/booking/create";
+import { list as listBookings } from "@/api/booking/list";
+import { SearchSlash } from "lucide-react";
 
 export default function Dashboard() {
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: "1",
-      name: "Maria Silva",
-      email: "maria.silva@email.com",
-      password: "senha123",
-    },
-    {
-      id: "2",
-      name: "João Santos",
-      email: "joao.santos@email.com",
-      password: "senha123",
-    },
-    {
-      id: "3",
-      name: "Ana Costa",
-      email: "ana.costa@email.com",
-      password: "senha123",
-    },
-  ]);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const [resources, setResources] = useState<Resource[]>([
-    { id: "1", name: "Sala de Reunião A", type: "sala", quantity: 1 },
-    { id: "2", name: "Projetor Multimídia", type: "equipamento", quantity: 3 },
-    { id: "3", name: "Notebook Dell XPS", type: "equipamento", quantity: 5 },
-  ]);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastVariant, setToastVariant] = useState<
+    "default" | "success" | "error"
+  >("default");
+  const [toastMessage, setToastMessage] = useState("");
 
-  const bookings: Booking[] = [
-    {
-      id: "1",
-      userName: "Maria Silva",
-      time: "08:00 - 09:00",
-      resourceName: "Sala de Reunião A",
-    },
-    {
-      id: "2",
-      userName: "João Santos",
-      time: "09:00 - 10:30",
-      resourceName: "Projetor Multimídia",
-    },
-    {
-      id: "3",
-      userName: "Ana Costa",
-      time: "10:00 - 12:00",
-      resourceName: "Sala de Conferência",
-    },
-    {
-      id: "4",
-      userName: "Pedro Oliveira",
-      time: "11:00 - 12:00",
-      resourceName: "Notebook Dell XPS",
-    },
-  ];
+  useEffect(() => {
+    listBookings()
+      .then(setBookings)
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-  const handleAddUser = (newUser: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
-    setUsers([...users, { id: crypto.randomUUID(), ...newUser }]);
-    setIsUserModalOpen(false);
-  };
-
-  const handleAddResource = (newResource: {
-    name: string;
-    type: string;
-    quantity: number;
-  }) => {
-    setResources([...resources, { id: crypto.randomUUID(), ...newResource }]);
-    setIsResourceModalOpen(false);
+  const handleBooking = (newBooking: Booking) => {
+    createBooking(newBooking)
+      .then(() => {
+        setToastVariant("success");
+        setToastMessage("Reserva efetuada com sucesso!");
+        setToastOpen(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        setToastVariant("error");
+        setToastMessage("Falha ao reservar recurso");
+        setToastOpen(true);
+      });
+    setIsBookingModalOpen(false);
   };
 
   return (
@@ -116,12 +59,9 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="flex gap-4">
-            <Button onClick={() => setIsUserModalOpen(true)}>
-              Adicionar Usuário
-            </Button>
-            <Button onClick={() => setIsResourceModalOpen(true)}>
-              Adicionar Recurso
+          <div className="flex gap-2">
+            <Button onClick={() => setIsBookingModalOpen(true)}>
+              Reservar Recurso
             </Button>
           </div>
         </div>
@@ -232,39 +172,37 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <DatePicker />
 
-              <div className="space-y-3">
-                {bookings.map((booking) => (
-                  <Card key={booking.id}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <p className="text-gray-900">{booking.userName}</p>
-                        <p className="text-sm text-gray-600">{booking.time}</p>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-600">
-                        {booking.resourceName}
+              {!!bookings.length ? (
+                <div className="space-y-3">
+                  {bookings.map((booking) => (
+                    <BookingItem key={booking.id} booking={booking} />
+                  ))}
+                </div>
+              ) : (
+                <Card className="flex items-center justify-center">
+                  <CardContent className="py-12">
+                    <div className="text-center text-gray-500">
+                      <SearchSlash className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p className="font-medium">Nenhuma reserva encontrada</p>
+                      <p className="text-sm">
+                        Use o botão &quot;Reservar Recurso&quot; para começar
                       </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      <AddUserModal
-        open={isUserModalOpen}
-        onOpenChange={setIsUserModalOpen}
-        onAddUser={handleAddUser}
+      <BookResourceModal
+        open={isBookingModalOpen}
+        onOpenChange={setIsBookingModalOpen}
+        onBookResource={handleBooking}
       />
 
-      <AddResourceModal
-        open={isResourceModalOpen}
-        onOpenChange={setIsResourceModalOpen}
-        onAddResource={handleAddResource}
-      />
+      <Toast open={toastOpen} variant={toastVariant} message={toastMessage} />
     </>
   );
 }
