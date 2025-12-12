@@ -2,7 +2,7 @@ import { Booking as BookingType } from "@/api/booking/create";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type BookingProps = {
-  booking: BookingType;
+  booking: BookingType & { id: string };
 };
 
 const Booking = ({ booking }: BookingProps) => {

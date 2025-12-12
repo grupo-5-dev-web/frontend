@@ -13,8 +13,10 @@ import { Booking, create as createBooking } from "@/api/booking/create";
 import { list as listBookings } from "@/api/booking/list";
 import { SearchSlash } from "lucide-react";
 
+type BookingWithId = Booking & { id: string };
+
 export default function Dashboard() {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<BookingWithId[]>([]);
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 

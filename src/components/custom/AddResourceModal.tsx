@@ -24,10 +24,12 @@ import { Category } from "@/api/category/create";
 
 import { useState } from "react";
 
+type CategoryWithId = Category & { id: string };
+
 interface AddResourceModalProps {
   open: boolean;
   isEditing?: Resource | null;
-  types?: Category[];
+  types?: CategoryWithId[];
   onOpenChange: (open: boolean) => void;
   onAddResource: (resource: Resource) => void;
 }

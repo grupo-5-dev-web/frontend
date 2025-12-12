@@ -31,12 +31,16 @@ interface BookResourceModalProps {
   onBookResource: (booking: Booking) => void;
 }
 
+type ResourceWithId = Resource & { id: string };
+
 const BookResourceModal: React.FC<BookResourceModalProps> = ({
   open,
   onOpenChange,
   onBookResource,
 }) => {
-  const [availableResources, setAvailableResources] = useState<Resource[]>([]);
+  const [availableResources, setAvailableResources] = useState<
+    ResourceWithId[]
+  >([]);
 
   const [resource, setResource] = useState("");
   const [startTime, setStartTime] = useState("");

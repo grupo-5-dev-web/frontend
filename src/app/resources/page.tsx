@@ -14,8 +14,10 @@ import { list as listResources } from "@/api/resource/list";
 import { useEffect, useState } from "react";
 import { Toast } from "@/components/ui/toast";
 
+type CategoryWithId = Category & { id: string };
+
 export default function ResourcesPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryWithId[]>([]);
   const [resources, setResources] = useState<Resource[]>([]);
 
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
