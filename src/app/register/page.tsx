@@ -28,6 +28,7 @@ export default function RegisterPage() {
   const [toastVariant, setToastVariant] = useState<
     "default" | "success" | "error"
   >("default");
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,11 +37,13 @@ export default function RegisterPage() {
         .then(() => {
           setToastOpen(true);
           setToastVariant("success");
+          setToastMessage("Usuário cadastrado com sucesso!");
           router.push("/login");
         })
         .catch((error) => {
           setToastOpen(true);
           setToastVariant("error");
+          setToastMessage("Falha ao cadastrar usuário");
           console.error(error);
         });
     }
@@ -136,11 +139,7 @@ export default function RegisterPage() {
         </Card>
       </div>
 
-      <Toast
-        open={toastOpen}
-        variant={toastVariant}
-        message="Usuário cadastrado com sucesso!"
-      />
+      <Toast open={toastOpen} variant={toastVariant} message={toastMessage} />
     </>
   );
 }
