@@ -6,7 +6,7 @@ export const list = () => {
   const token = getAuthToken();
 
   return axios
-    .get(`${apiUrl}/bookings/`, {
+    .get(`${apiUrl}/bookings/?tenant_id=a838726b-699f-45b5-9a07-5ee092ae84f2`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => response.data)

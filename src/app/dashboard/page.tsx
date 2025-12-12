@@ -12,6 +12,7 @@ import { Booking as BookingItem } from "@/components/custom/Booking";
 import { Booking, create as createBooking } from "@/api/booking/create";
 import { list as listBookings } from "@/api/booking/list";
 import { SearchSlash } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 type BookingWithId = Booking & { id: string };
 

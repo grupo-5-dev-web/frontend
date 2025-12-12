@@ -1,10 +1,11 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
-import { removeAuthToken } from "@/utils";
-
 import { Button } from "./button";
 import { ClockFading } from "lucide-react";
+
+import { logout } from "@/api/user/logout";
+
+import { useRouter, usePathname } from "next/navigation";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -13,7 +14,7 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const activePath = pathname.split("/")[1];
 
   const handleLogout = () => {
-    removeAuthToken();
+    logout();
     router.push("/login");
   };
 

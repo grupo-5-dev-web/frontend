@@ -38,7 +38,7 @@ export const create = ({
 
   return axios
     .post(
-      `${apiUrl}/resources`,
+      `${apiUrl}/resources/`,
       {
         name,
         description,
@@ -46,8 +46,16 @@ export const create = ({
         status,
         capacity,
         location,
-        availability_schedule,
         image_url,
+        availability_schedule: {
+          monday: ["00:00-23:59"],
+          tuesday: ["00:00-23:59"],
+          wednesday: ["00:00-23:59"],
+          thursday: ["00:00-23:59"],
+          friday: ["00:00-23:59"],
+          saturday: ["00:00-23:59"],
+          sunday: ["00:00-23:59"],
+        },
         tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: Test tenant_id, should be handled properly
       },
       {

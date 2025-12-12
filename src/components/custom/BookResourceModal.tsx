@@ -24,6 +24,7 @@ import { list as listResources } from "@/api/resource/list";
 import { Booking } from "@/api/booking/create";
 
 import { useEffect, useState } from "react";
+import { useUser } from "@/contexts/UserContext";
 
 interface BookResourceModalProps {
   open: boolean;
@@ -47,6 +48,8 @@ const BookResourceModal: React.FC<BookResourceModalProps> = ({
   const [endTime, setEndTime] = useState("");
   const [notes, setNotes] = useState("");
 
+  const { user } = useUser();
+
   useEffect(() => {
     listResources()
       .then(setAvailableResources)
@@ -56,14 +59,21 @@ const BookResourceModal: React.FC<BookResourceModalProps> = ({
       });
   }, []);
 
+  const formatDateTime = (time: string) => {
+    const date = new Date();
+    const [hours, minutes] = time.split(":").map(Number);
+    date.setHours(hours, minutes, 0, 0);
+    return date.toISOString();
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (resource && startTime && endTime) {
       onBookResource({
         resourceId: resource,
-        userId: "",
-        startTime,
-        endTime,
+        userId: user?.id ?? "",
+        startTime: formatDateTime(startTime),
+        endTime: formatDateTime(endTime),
         notes,
       });
       setResource("");

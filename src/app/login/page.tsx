@@ -14,25 +14,44 @@ import { Label } from "@/components/ui/label";
 import { LogIn } from "lucide-react";
 
 import { useRouter } from "next/navigation";
+import { useUser } from "@/contexts/UserContext";
 
 import { login } from "@/api/user/login";
+import { getCurrentUser } from "@/api/user/getCurrentUser";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setUser } = useUser();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
     if (email && password) {
-      login({ email, password })
-        .then(() => {
-          router.push("/");
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      try {
+        // Step 1: Login and get token
+        await login({ email, password });
+
+        // Step 2: Fetch user information
+        const userData = await getCurrentUser();
+
+        // Step 3: Store user in context and localStorage
+        setUser(userData);
+
+        // Step 4: Redirect to dashboard
+        router.push("/");
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "Login failed");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -58,6 +77,12 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -67,6 +92,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -79,12 +105,13 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
 
-            <Button type="submit" className="w-full mt-8">
+            <Button type="submit" className="w-full mt-8" disabled={isLoading}>
               <LogIn className="w-4 h-4 mr-2" />
-              Entrar
+              {isLoading ? "Entrando..." : "Entrar"}
             </Button>
 
             <div className="flex items-center justify-center text-sm">
