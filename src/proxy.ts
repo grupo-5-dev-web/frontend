@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  const authToken = request.cookies.get("authToken")?.value;
+  const authToken = request.cookies.get("auth_token")?.value;
   const isLoggedIn = authToken || false;
 
   // Rotas públicas, não precisam de autenticação
