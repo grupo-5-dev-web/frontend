@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { removeAuthToken } from "@/utils";
 
 import { Button } from "./button";
+import { ClockFading } from "lucide-react";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -23,12 +24,10 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-                  <span className="text-white">RG</span>
-                </div>
-                <span className="text-gray-900">Resource Manager</span>
+                <ClockFading />
+                <h1 className="text-gray-900">Chronos</h1>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <Button
                   variant={activePath === "" ? "default" : "ghost"}
                   onClick={() => router.push("/")}
