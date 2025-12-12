@@ -2,8 +2,12 @@ import Cookies from "js-cookie";
 
 const isProduction = process.env.NODE_ENV === "production";
 
+const getAuthToken = () => {
+  return Cookies.get("auth_token") || null;
+};
+
 const setAuthToken = (token: string) => {
-  Cookies.set("authToken", token, {
+  Cookies.set("auth_token", token, {
     expires: 1,
     path: "/",
     secure: isProduction,
@@ -12,11 +16,11 @@ const setAuthToken = (token: string) => {
 };
 
 const removeAuthToken = () => {
-  Cookies.remove("authToken", {
+  Cookies.remove("auth_token", {
     path: "/",
     secure: isProduction,
     sameSite: "Lax",
   });
 };
 
-export { setAuthToken, removeAuthToken };
+export { getAuthToken, setAuthToken, removeAuthToken };
