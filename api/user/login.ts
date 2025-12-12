@@ -1,4 +1,5 @@
 import { setAuthToken } from "@/utils";
+
 import axios from "axios";
 
 export type Login = {
@@ -7,13 +8,11 @@ export type Login = {
 };
 
 export const login = ({ email, password }: Login) => {
+  const apiUrl = process.env.NEXT_PUBLIC_USER_API_URL;
   const data = new URLSearchParams({ email, password }).toString();
 
   return axios
-    .post(
-      "https://user-service-production-6b5a.up.railway.app/users/login",
-      data
-    )
+    .post(`${apiUrl}/users/login`, data)
     .then((response) => {
       setAuthToken(response.data.access_token);
     })

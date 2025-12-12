@@ -14,9 +14,11 @@ export const create = ({
   phone = "",
   email,
   password,
-  user_type = "user",
+  user_type = "admin",
   department = "",
 }: User) => {
+  const apiUrl = process.env.NEXT_PUBLIC_USER_API_URL;
+
   const getPermissions = () => {
     switch (user_type) {
       case "admin":
@@ -44,23 +46,17 @@ export const create = ({
   };
 
   return axios
-    .post(
-      "https://user-service-production-6b5a.up.railway.app/users/",
-      {
-        name,
-        phone,
-        email,
-        password,
-        user_type,
-        department,
-        is_active: true,
-        permissions: getPermissions(),
-        tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: Test tenant_id, should be handled properly
-      },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    )
+    .post(`${apiUrl}/users/`, {
+      name,
+      phone,
+      email,
+      password,
+      user_type,
+      department,
+      is_active: true,
+      permissions: getPermissions(),
+      tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: Test tenant_id, should be handled properly
+    })
     .then((response) => response.data)
     .catch((error) => {
       throw new Error(error.response?.data?.message || "User creation failed");
