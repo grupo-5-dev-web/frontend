@@ -14,7 +14,8 @@ import { Label } from "@/components/ui/label";
 import { LogIn } from "lucide-react";
 
 import { useRouter } from "next/navigation";
-import { setAuthToken } from "@/utils";
+
+import { login } from "@/api/user/login";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,11 +25,14 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Simulação de login, validar com backend
     if (email && password) {
-      // TODO: Login bem-sucedido
-      setAuthToken(email);
-      router.push("/");
+      login({ email, password })
+        .then(() => {
+          router.push("/");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
