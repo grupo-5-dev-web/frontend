@@ -93,7 +93,7 @@ export type Booking = {
   id?: UUID;
   tenant_id?: UUID;
   resource_id: UUID;
-  user_id: string;
+  user_id: UUID;
   start_time: string;
   end_time: string;
   notes?: string;
