@@ -49,6 +49,7 @@ export type Tenant = {
 };
 
 export type Category = {
+  id?: UUID;
   tenant_id?: UUID;
   name: string;
   description: string;

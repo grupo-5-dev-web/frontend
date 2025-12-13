@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import Color from "colorjs.io";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,11 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Color from "colorjs.io";
 
-import { Category } from "@/api/category/create";
-
-import { useState } from "react";
+import { Category } from "@/api/types";
 
 interface AddCategoryModalProps {
   open: boolean;

@@ -19,9 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Resource } from "@/api/resource/create";
+import { UUID } from "crypto";
+import { Resource, Booking } from "@/api/types";
 import { list as listResources } from "@/api/resource/list";
-import { Booking } from "@/api/booking/create";
 
 import { useEffect, useState } from "react";
 import { useUser } from "@/contexts/UserContext";
@@ -32,23 +32,19 @@ interface BookResourceModalProps {
   onBookResource: (booking: Booking) => void;
 }
 
-type ResourceWithId = Resource & { id: string };
-
 const BookResourceModal: React.FC<BookResourceModalProps> = ({
   open,
   onOpenChange,
   onBookResource,
 }) => {
-  const [availableResources, setAvailableResources] = useState<
-    ResourceWithId[]
-  >([]);
+  const [availableResources, setAvailableResources] = useState<Resource[]>([]);
 
-  const [resource, setResource] = useState("");
+  const [resource, setResource] = useState<UUID>();
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [notes, setNotes] = useState("");
 
-  const { user } = useUser();
+  const { userState: user } = useUser();
 
   useEffect(() => {
     listResources()
@@ -70,13 +66,13 @@ const BookResourceModal: React.FC<BookResourceModalProps> = ({
     e.preventDefault();
     if (resource && startTime && endTime) {
       onBookResource({
-        resourceId: resource,
-        userId: user?.id ?? "",
-        startTime: formatDateTime(startTime),
-        endTime: formatDateTime(endTime),
+        resource_id: resource,
+        user_id: user?.id ?? "",
+        start_time: formatDateTime(startTime),
+        end_time: formatDateTime(endTime),
         notes,
       });
-      setResource("");
+      setResource(undefined);
       setStartTime("");
       setEndTime("");
       setNotes("");
@@ -104,7 +100,7 @@ const BookResourceModal: React.FC<BookResourceModalProps> = ({
                 <Select
                   value={resource}
                   disabled={!availableResources?.length}
-                  onValueChange={setResource}
+                  onValueChange={(value) => setResource(value as UUID)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o recurso" />
@@ -113,7 +109,10 @@ const BookResourceModal: React.FC<BookResourceModalProps> = ({
                   {!!availableResources?.length && (
                     <SelectContent>
                       {availableResources.map((resource) => (
-                        <SelectItem key={resource.id} value={resource.id}>
+                        <SelectItem
+                          key={resource.id}
+                          value={resource.id as string}
+                        >
                           {resource.name}
                         </SelectItem>
                       ))}

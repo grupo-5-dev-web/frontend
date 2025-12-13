@@ -19,17 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Resource } from "@/api/resource/create";
-import { Category } from "@/api/category/create";
+import { Category, Resource } from "@/api/types";
 
 import { useState } from "react";
-
-type CategoryWithId = Category & { id: string };
 
 interface AddResourceModalProps {
   open: boolean;
   isEditing?: Resource | null;
-  types?: CategoryWithId[];
+  types?: Category[];
   onOpenChange: (open: boolean) => void;
   onAddResource: (resource: Resource) => void;
 }
@@ -125,7 +122,7 @@ const AddResourceModal: React.FC<AddResourceModalProps> = ({
                   {!!types?.length && (
                     <SelectContent>
                       {types.map((type) => (
-                        <SelectItem key={type.id} value={type.id}>
+                        <SelectItem key={type.id} value={type.id as string}>
                           {type.name}
                         </SelectItem>
                       ))}

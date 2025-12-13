@@ -20,7 +20,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { User } from "@/api/user/create";
+
+import { User } from "@/api/types";
 
 interface AddUserModalProps {
   open: boolean;

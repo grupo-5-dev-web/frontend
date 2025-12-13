@@ -6,18 +6,17 @@ import { AddCategoryModal } from "@/components/custom/AddCategoryModal";
 import { AddResourceModal } from "@/components/custom/AddResourceModal";
 import { Pencil, ClipboardClock } from "lucide-react";
 
-import { Category, create as createCategory } from "@/api/category/create";
+import { Category, Resource } from "@/api/types";
+import { create as createCategory } from "@/api/category/create";
 import { list as listCategories } from "@/api/category/list";
-import { Resource, create as createResource } from "@/api/resource/create";
+import { create as createResource } from "@/api/resource/create";
 import { list as listResources } from "@/api/resource/list";
 
 import { useEffect, useState } from "react";
 import { Toast } from "@/components/ui/toast";
 
-type CategoryWithId = Category & { id: string };
-
 export default function ResourcesPage() {
-  const [categories, setCategories] = useState<CategoryWithId[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [resources, setResources] = useState<Resource[]>([]);
 
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
