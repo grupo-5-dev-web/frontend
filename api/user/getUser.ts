@@ -1,12 +1,12 @@
 import axios from "axios";
 import { getAuthToken } from "@/utils";
 
-export const getCurrentUser = () => {
+export const getUser = (userId: string) => {
   const apiUrl = process.env.NEXT_PUBLIC_USER_API_URL;
   const token = getAuthToken();
 
   return axios
-    .get(`${apiUrl}/users/me`, {
+    .get(`${apiUrl}/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

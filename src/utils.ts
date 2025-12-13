@@ -3,11 +3,11 @@ import Cookies from "js-cookie";
 const isProduction = process.env.NODE_ENV === "production";
 
 const getAuthToken = () => {
-  return Cookies.get("auth_token") || null;
+  return Cookies.get("access_token") || null;
 };
 
 const setAuthToken = (token: string) => {
-  Cookies.set("auth_token", token, {
+  Cookies.set("access_token", token, {
     expires: 1,
     path: "/",
     secure: isProduction,
@@ -16,7 +16,7 @@ const setAuthToken = (token: string) => {
 };
 
 const removeAuthToken = () => {
-  Cookies.remove("auth_token", {
+  Cookies.remove("access_token", {
     path: "/",
     secure: isProduction,
     sameSite: "Lax",
