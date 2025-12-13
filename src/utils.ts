@@ -1,5 +1,7 @@
 import Cookies from "js-cookie";
 
+import { User } from "@/api/types";
+
 const isProduction = process.env.NODE_ENV === "production";
 
 const getAuthToken = () => {
@@ -23,16 +25,9 @@ const removeAuthToken = () => {
   });
 };
 
-export type StoredUser = {
-  id: string;
-  email: string;
-  name?: string;
-  role?: string;
-};
-
 const USER_STORAGE_KEY = "current_user";
 
-const getStoredUser = (): StoredUser | null => {
+const getStoredUser = (): User | null => {
   if (typeof window === "undefined") return null;
 
   try {
@@ -44,7 +39,7 @@ const getStoredUser = (): StoredUser | null => {
   }
 };
 
-const setStoredUser = (user: StoredUser) => {
+const setStoredUser = (user: User) => {
   if (typeof window === "undefined") return;
 
   try {
