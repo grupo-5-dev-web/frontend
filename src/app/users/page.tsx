@@ -3,42 +3,33 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { AddUserModal } from "@/components/custom/AddUserModal";
 import { Mail, User as UserIcon } from "lucide-react";
 
-import { useState } from "react";
-import { AddUserModal } from "@/components/custom/AddUserModal";
+import { User, create as createUser } from "@/api/user/create";
+import { list as listUsers } from "@/api/user/list";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
+import { useEffect, useState } from "react";
+import { Toast } from "@/components/ui/toast";
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: "1",
-      name: "Maria Silva",
-      email: "maria.silva@email.com",
-      password: "senha123",
-    },
-    {
-      id: "2",
-      name: "João Santos",
-      email: "joao.santos@email.com",
-      password: "senha123",
-    },
-    {
-      id: "3",
-      name: "Ana Costa",
-      email: "ana.costa@email.com",
-      password: "senha123",
-    },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastVariant, setToastVariant] = useState<
+    "default" | "success" | "error"
+  >("default");
+  const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    listUsers()
+      .then(setUsers)
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const getInitials = (name: string) => {
     return name
@@ -49,12 +40,20 @@ export default function UsersPage() {
       .slice(0, 2);
   };
 
-  const handleAddUser = (newUser: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
-    setUsers([...users, { id: crypto.randomUUID(), ...newUser }]);
+  const handleAddUser = (newUser: User) => {
+    createUser(newUser)
+      .then((createdUser) => {
+        setUsers((prevUsers) => [...prevUsers, createdUser]);
+        setToastVariant("success");
+        setToastMessage("Usuário adicionado com sucesso!");
+        setToastOpen(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        setToastVariant("error");
+        setToastMessage("Falha ao adicionar usuário");
+        setToastOpen(true);
+      });
     setIsUserModalOpen(false);
   };
 
@@ -74,31 +73,28 @@ export default function UsersPage() {
           </Button>
         </div>
 
-        {users.length === 0 ? (
-          <Card>
-            <CardContent className="py-12">
-              <div className="text-center text-gray-500">
-                <UserIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Nenhum usuário cadastrado ainda</p>
-                <p className="text-sm">
-                  Use o botão &quot;Adicionar Usuário&quot; para começar
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
+        {!!users.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {users.map((user) => (
-              <Card key={user.id}>
+              <Card key={user.email}>
                 <CardHeader>
                   <div className="flex items-center gap-4">
                     <Avatar>
-                      <AvatarFallback className="bg-linear-to-br from-blue-600 to-blue-800 text-white">
+                      <AvatarFallback className="bg-linear-to-br from-blue-300 to-blue-800 text-white font-bold">
                         {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1">
+                    <div className="flex items-center justify-between w-full">
                       <CardTitle className="text-lg">{user.name}</CardTitle>
+                      <span
+                        className={`p-2 border rounded-sm text-xs text-white font-bold ${
+                          user.user_type === "admin"
+                            ? "bg-blue-400 border-blue-500"
+                            : "bg-primary/80 border-primary"
+                        }`}
+                      >
+                        {user.user_type?.toLocaleUpperCase()}
+                      </span>
                     </div>
                   </div>
                 </CardHeader>
@@ -111,6 +107,18 @@ export default function UsersPage() {
               </Card>
             ))}
           </div>
+        ) : (
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center text-gray-500">
+                <UserIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p className="font-medium">Nenhum usuário cadastrado ainda</p>
+                <p className="text-sm">
+                  Use o botão &quot;Adicionar Usuário&quot; para começar
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
 
@@ -118,6 +126,13 @@ export default function UsersPage() {
         open={isUserModalOpen}
         onOpenChange={setIsUserModalOpen}
         onAddUser={handleAddUser}
+      />
+
+      <Toast
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        variant={toastVariant}
+        message={toastMessage}
       />
     </>
   );

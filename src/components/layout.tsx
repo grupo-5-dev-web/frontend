@@ -1,9 +1,17 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
-import { removeAuthToken } from "@/utils";
+import { Button } from "./ui/button";
+import { ClockFading } from "lucide-react";
 
-import { Button } from "./button";
+import { logout } from "@/api/user/logout";
+
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { useUser } from "@/contexts/UserContext";
+
+import { Tenant } from "@/api/types";
+import { getTenant } from "@/api/tenant/getTenant";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -11,9 +19,18 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const activePath = pathname.split("/")[1];
 
+  const { userState: user } = useUser();
+
+  const [tenant, setTenant] = useState<Tenant | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      getTenant(user.tenant_id).then(setTenant).catch(console.error);
+    }
+  }, [user]);
+
   const handleLogout = () => {
-    removeAuthToken();
-    router.push("/login");
+    logout();
   };
 
   return (
@@ -23,12 +40,20 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-                  <span className="text-white">RG</span>
+                <ClockFading />
+
+                <div className="flex flex-col">
+                  <h1 className="text-2xl text-gray-900 font-semibold">
+                    Chronos
+                  </h1>
+                  {tenant && (
+                    <span className="text-sm text-gray-500 font-medium">
+                      /{tenant.name}
+                    </span>
+                  )}
                 </div>
-                <span className="text-gray-900">Resource Manager</span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <Button
                   variant={activePath === "" ? "default" : "ghost"}
                   onClick={() => router.push("/")}

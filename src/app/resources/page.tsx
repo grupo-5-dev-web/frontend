@@ -1,59 +1,85 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { AddCategoryModal } from "@/components/custom/AddCategoryModal";
 import { AddResourceModal } from "@/components/custom/AddResourceModal";
+import { Pencil, ClipboardClock } from "lucide-react";
 
-import { useState } from "react";
+import { Category, Resource } from "@/api/types";
+import { create as createCategory } from "@/api/category/create";
+import { list as listCategories } from "@/api/category/list";
+import { create as createResource } from "@/api/resource/create";
+import { list as listResources } from "@/api/resource/list";
 
-interface Resource {
-  id: string;
-  name: string;
-  type: string;
-  quantity: number;
-}
+import { useEffect, useState } from "react";
+import { Toast } from "@/components/ui/toast";
 
 export default function ResourcesPage() {
-  const [resources, setResources] = useState<Resource[]>([
-    { id: "1", name: "Sala de Reunião A", type: "sala", quantity: 1 },
-    { id: "2", name: "Projetor Multimídia", type: "equipamento", quantity: 3 },
-    { id: "3", name: "Notebook Dell XPS", type: "equipamento", quantity: 5 },
-  ]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
+
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
+  const [editingResource, setEditingResource] = useState<Resource | null>(null);
 
-  const getTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      sala: "Sala",
-      equipamento: "Equipamento",
-      veiculo: "Veículo",
-      ferramenta: "Ferramenta",
-      outro: "Outro",
-    };
-    return labels[type] || type;
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastVariant, setToastVariant] = useState<
+    "default" | "success" | "error"
+  >("default");
+  const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    listCategories()
+      .then(setCategories)
+      .catch((error) => {
+        console.error(error);
+      });
+
+    listResources()
+      .then(setResources)
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const handleAddCategory = (newCategory: Category) => {
+    createCategory(newCategory)
+      .then((createdCategory) => {
+        setCategories((prevCategories) => [...prevCategories, createdCategory]);
+        setToastVariant("success");
+        setToastMessage("Categoria adicionada com sucesso!");
+        setToastOpen(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        setToastVariant("error");
+        setToastMessage("Falha ao adicionar categoria");
+        setToastOpen(true);
+      });
+    setIsCategoryModalOpen(false);
   };
 
-  const getTypeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      sala: "bg-blue-100 text-blue-800",
-      equipamento: "bg-purple-100 text-purple-800",
-      veiculo: "bg-green-100 text-green-800",
-      ferramenta: "bg-orange-100 text-orange-800",
-      outro: "bg-gray-100 text-gray-800",
-    };
-    return colors[type] || colors.outro;
-  };
-
-  const handleAddResource = (newResource: {
-    name: string;
-    type: string;
-    quantity: number;
-  }) => {
-    setResources([...resources, { id: crypto.randomUUID(), ...newResource }]);
+  const handleAddResource = (newResource: Resource) => {
+    createResource(newResource)
+      .then((createdResource) => {
+        setResources((prevResources) => [...prevResources, createdResource]);
+        setToastVariant("success");
+        setToastMessage("Recurso adicionado com sucesso!");
+        setToastOpen(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        setToastVariant("error");
+        setToastMessage("Falha ao adicionar recurso");
+        setToastOpen(true);
+      });
     setIsResourceModalOpen(false);
   };
 
   const handleEditResource = (resource: Resource) => {
+    setEditingResource(resource);
     setIsResourceModalOpen(true);
   };
 
@@ -67,50 +93,77 @@ export default function ResourcesPage() {
               Gerencie todos os recursos disponíveis
             </p>
           </div>
-          <Button onClick={() => setIsResourceModalOpen(true)}>
-            Adicionar Recurso
-          </Button>
+
+          <div className="flex gap-2">
+            <Button onClick={() => setIsCategoryModalOpen(true)}>
+              Adicionar Categoria
+            </Button>
+            <Button onClick={() => setIsResourceModalOpen(true)}>
+              Adicionar Recurso
+            </Button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {resources.map((resource) => (
-            <div
-              key={resource.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-200"
-            >
-              <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h3 className="text-lg">{resource.name}</h3>
-                <Button onClick={() => handleEditResource(resource)}>
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="p-6">
-                <div className="space-y-3">
+
+        {resources.length ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {resources.map((resource) => (
+              <Card key={resource.name}>
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Tipo:</span>
-                    <span
-                      className={`px-2 py-1 rounded-md text-xs ${getTypeColor(
-                        resource.type
-                      )}`}
-                    >
-                      {getTypeLabel(resource.type)}
-                    </span>
+                    <h3 className="text-lg">{resource.name}</h3>
+                    <Button onClick={() => handleEditResource(resource)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Quantidade:</span>
-                    <span className="text-gray-900">{resource.quantity}</span>
+                </CardHeader>
+
+                <hr />
+
+                <CardContent>
+                  <div className="mt-6 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-600">Tipo:</p>
+                      <span>{resource.description}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-600">Quantidade:</p>
+                      <p className="text-gray-900">{resource.capacity}</p>
+                    </div>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="py-12">
+              <div className="text-center text-gray-500">
+                <ClipboardClock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p className="font-medium">Nenhum recurso cadastrado ainda</p>
+                <p className="text-sm">
+                  Use o botão &quot;Adicionar Recurso&quot; para começar
+                </p>
               </div>
-            </div>
-          ))}
-        </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
+
+      <AddCategoryModal
+        open={isCategoryModalOpen}
+        onOpenChange={setIsCategoryModalOpen}
+        onAddCategory={handleAddCategory}
+      />
 
       <AddResourceModal
         open={isResourceModalOpen}
+        isEditing={editingResource}
+        types={categories}
         onOpenChange={setIsResourceModalOpen}
         onAddResource={handleAddResource}
       />
+
+      <Toast open={toastOpen} variant={toastVariant} message={toastMessage} />
     </>
   );
 }

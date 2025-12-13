@@ -1,9 +1,15 @@
 import Cookies from "js-cookie";
 
+import { User } from "@/api/types";
+
 const isProduction = process.env.NODE_ENV === "production";
 
+const getAuthToken = () => {
+  return Cookies.get("access_token") || null;
+};
+
 const setAuthToken = (token: string) => {
-  Cookies.set("authToken", token, {
+  Cookies.set("access_token", token, {
     expires: 1,
     path: "/",
     secure: isProduction,
@@ -12,11 +18,52 @@ const setAuthToken = (token: string) => {
 };
 
 const removeAuthToken = () => {
-  Cookies.remove("authToken", {
+  Cookies.remove("access_token", {
     path: "/",
     secure: isProduction,
     sameSite: "Lax",
   });
 };
 
-export { setAuthToken, removeAuthToken };
+const USER_STORAGE_KEY = "current_user";
+
+const getStoredUser = (): User | null => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const userJson = localStorage.getItem(USER_STORAGE_KEY);
+    return userJson ? JSON.parse(userJson) : null;
+  } catch (error) {
+    console.error("Error reading user from localStorage:", error);
+    return null;
+  }
+};
+
+const setStoredUser = (user: User) => {
+  if (typeof window === "undefined") return;
+
+  try {
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+  } catch (error) {
+    console.error("Error saving user to localStorage:", error);
+  }
+};
+
+const removeStoredUser = () => {
+  if (typeof window === "undefined") return;
+
+  try {
+    localStorage.removeItem(USER_STORAGE_KEY);
+  } catch (error) {
+    console.error("Error removing user from localStorage:", error);
+  }
+};
+
+export {
+  getAuthToken,
+  setAuthToken,
+  removeAuthToken,
+  getStoredUser,
+  setStoredUser,
+  removeStoredUser,
+};

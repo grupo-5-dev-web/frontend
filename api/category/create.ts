@@ -1,0 +1,34 @@
+import axios from "axios";
+
+import { getAuthToken } from "@/utils";
+import { Category } from "../types";
+
+export const create = ({ name, description, type, icon, color }: Category) => {
+  const apiUrl = process.env.NEXT_PUBLIC_RESOURCE_API_URL;
+  const token = getAuthToken();
+
+  if (!token) {
+    throw new Error("Authentication token is missing");
+  }
+
+  return axios
+    .post(
+      `${apiUrl}/categories/`,
+      {
+        name,
+        description,
+        type,
+        icon,
+        color,
+        is_active: true,
+        tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: tenant_id está hardcoded pra simplificar a criação de categorias (remover a etapa de criação de tenant/empresa)
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(error.response?.detail || "Category creation failed");
+    });
+};
