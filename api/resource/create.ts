@@ -47,6 +47,7 @@ export const create = ({
         capacity,
         location,
         image_url,
+        // TODO: A ideia é o frontend permitir a configuração do horário de disponibilidade na criação do recurso
         availability_schedule: {
           monday: ["00:00-23:59"],
           tuesday: ["00:00-23:59"],
@@ -56,7 +57,7 @@ export const create = ({
           saturday: ["00:00-23:59"],
           sunday: ["00:00-23:59"],
         },
-        tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: Test tenant_id, should be handled properly
+        tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: tenant_id está hardcoded pra simplificar a criação de recursos (remover a etapa de criação de tenant/empresa)
       },
       {
         headers: { Authorization: `Bearer ${token}` },

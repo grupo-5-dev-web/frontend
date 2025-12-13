@@ -23,7 +23,7 @@ export const create = ({ name, description, type, icon, color }: Category) => {
         icon,
         color,
         is_active: true,
-        tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: Test tenant_id, should be handled properly
+        tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: tenant_id está hardcoded pra simplificar a criação de categorias (remover a etapa de criação de tenant/empresa)
       },
       {
         headers: { Authorization: `Bearer ${token}` },

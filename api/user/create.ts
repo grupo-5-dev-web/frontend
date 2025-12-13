@@ -14,7 +14,7 @@ export const create = ({
   phone = "",
   email,
   password,
-  user_type = "admin",
+  user_type = "admin", // Consideramos "admin" como padrão, para simplificar a criação de usuários via tela de cadastro
   department = "",
 }: User) => {
   const apiUrl = process.env.NEXT_PUBLIC_USER_API_URL;
@@ -55,7 +55,7 @@ export const create = ({
       department,
       is_active: true,
       permissions: getPermissions(),
-      tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: Test tenant_id, should be handled properly
+      tenant_id: "a838726b-699f-45b5-9a07-5ee092ae84f2", // TODO: tenant_id está hardcoded pra simplificar a criação de usuários (remover a etapa de criação de tenant/empresa)
     })
     .then((response) => response.data)
     .catch((error) => {
