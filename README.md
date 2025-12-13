@@ -18,6 +18,7 @@ A resource management system built with Next.js, React, and TypeScript. This app
   - `@radix-ui/react-label` - Form label component
   - `@radix-ui/react-select` - Select dropdown component
   - `@radix-ui/react-slot` - Slot component for component composition
+  - `@radix-ui/react-toast` - Toast component
 - **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Lucide React](https://lucide.dev/)** - Beautiful & consistent icon library
 - **[class-variance-authority](https://cva.style/)** - Component variant management
@@ -83,6 +84,9 @@ frontend/
 │   │   │   ├── select.tsx        # Select dropdown component
 │   │   │   └── toast.tsx         # Toast (snackbar) component
 │   │   └── utils.ts              # Component utility functions (cn helper)
+│   │
+│   ├── contexts/                 # Contexts for global data availability
+│   │   └── UserContext.css       # Context to hold user information across the application
 │   │
 │   ├── styles/                   # Global styles
 │   │   └── globals.css           # Global CSS with Tailwind directives
@@ -173,14 +177,10 @@ git clone git@github.com:grupo-5-dev-web/frontend.git
 cd frontend
 ```
 
-2. Install dependencies:
+2. Run the setup script:
 ```bash
-yarn install
-```
-
-3. Run the development server:
-```bash
-yarn dev
+chmod +x setup.sh
+bash setup.sh
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -192,14 +192,13 @@ The application uses cookie-based authentication:
 1. **Login**: User submits credentials → receives auth token → stored in cookie
 2. **Middleware**: Checks for auth token on protected routes
 3. **Client-side**: Uses `js-cookie` for token management in components
-4. **Server-side**: Uses Next.js `request.cookies` in middleware (proxy)
 
 ## 🧪 Testing
 
 The project uses Jest and React Testing Library for testing:
 
 ```bash
-yarn test                 # Run all tests
+yarn test                # Run all tests
 yarn test --watch        # Run tests in watch mode
 yarn test --coverage     # Run tests with coverage report
 ```
@@ -213,10 +212,13 @@ yarn test --coverage     # Run tests with coverage report
 
 ## 📦 Environment Variables
 
-Create a `.env.local` file in the root directory:
+Create a `.env` file in the root directory:
 
 ```env
-NODE_ENV=development
+NEXT_PUBLIC_TENANT_API_URL=$NEXT_PUBLIC_TENANT_API_URL
+NEXT_PUBLIC_USER_API_URL=$NEXT_PUBLIC_USER_API_URL
+NEXT_PUBLIC_RESOURCE_API_URL=$NEXT_PUBLIC_RESOURCE_API_URL
+NEXT_PUBLIC_BOOKING_API_URL=$NEXT_PUBLIC_BOOKING_API_URL
 ```
 
 ## 👥 Team
