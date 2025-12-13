@@ -8,15 +8,14 @@ import { DatePicker } from "@/components/custom/DatePicker";
 import { Toast } from "@/components/ui/toast";
 import { BookResourceModal } from "@/components/custom/BookResourceModal";
 import { Booking as BookingItem } from "@/components/custom/Booking";
-
-import { Booking, create as createBooking } from "@/api/booking/create";
-import { list as listBookings } from "@/api/booking/list";
 import { SearchSlash } from "lucide-react";
 
-type BookingWithId = Booking & { id: string };
+import { create as createBooking } from "@/api/booking/create";
+import { list as listBookings } from "@/api/booking/list";
+import { Booking } from "@/api/types";
 
 export default function Dashboard() {
-  const [bookings, setBookings] = useState<BookingWithId[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
@@ -27,11 +26,7 @@ export default function Dashboard() {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
-    listBookings()
-      .then(setBookings)
-      .catch((error) => {
-        console.error(error);
-      });
+    listBookings().then(setBookings).catch(console.error);
   }, []);
 
   const handleBooking = (newBooking: Booking) => {
