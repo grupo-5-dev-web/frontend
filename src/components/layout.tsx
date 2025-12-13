@@ -1,11 +1,17 @@
 "use client";
 
-import { Button } from "./button";
+import { Button } from "./ui/button";
 import { ClockFading } from "lucide-react";
 
 import { logout } from "@/api/user/logout";
 
 import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { useUser } from "@/contexts/UserContext";
+
+import { Tenant } from "@/api/types";
+import { getTenant } from "@/api/tenant/getTenant";
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const router = useRouter();
@@ -13,9 +19,18 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const activePath = pathname.split("/")[1];
 
+  const { userState: user } = useUser();
+
+  const [tenant, setTenant] = useState<Tenant | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      getTenant(user.tenant_id).then(setTenant).catch(console.error);
+    }
+  }, [user]);
+
   const handleLogout = () => {
     logout();
-    router.push("/login");
   };
 
   return (
@@ -26,7 +41,17 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2">
                 <ClockFading />
-                <h1 className="text-gray-900">Chronos</h1>
+
+                <div className="flex flex-col">
+                  <h1 className="text-2xl text-gray-900 font-semibold">
+                    Chronos
+                  </h1>
+                  {tenant && (
+                    <span className="text-sm text-gray-500 font-medium">
+                      /{tenant.name}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <Button
