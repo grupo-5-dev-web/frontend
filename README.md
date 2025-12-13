@@ -1,4 +1,4 @@
-# Resource Management System
+# Chronos | Resource Management System
 
 A resource management system built with Next.js, React, and TypeScript. This application provides a comprehensive interface for managing users and resources with authentication and a clean UI.
 
