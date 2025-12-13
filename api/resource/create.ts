@@ -1,27 +1,7 @@
-import { getAuthToken } from "@/utils";
 import axios from "axios";
 
-export type ResourceSchedule = Record<
-  | "monday"
-  | "tuesday"
-  | "wednesday"
-  | "thursday"
-  | "friday"
-  | "saturday"
-  | "sunday",
-  string[]
->;
-
-export type Resource = {
-  name: string;
-  description: string;
-  type: string;
-  status?: "disponivel" | "indisponivel" | "manutencao";
-  capacity: number;
-  location?: string;
-  availability_schedule?: ResourceSchedule;
-  image_url?: string;
-};
+import { getAuthToken } from "@/utils";
+import { Resource } from "../types";
 
 export const create = ({
   name,
@@ -35,6 +15,10 @@ export const create = ({
 }: Resource) => {
   const apiUrl = process.env.NEXT_PUBLIC_RESOURCE_API_URL;
   const token = getAuthToken();
+
+  if (!token) {
+    throw new Error("Authentication token is missing");
+  }
 
   return axios
     .post(

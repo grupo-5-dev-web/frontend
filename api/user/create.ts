@@ -1,13 +1,6 @@
 import axios from "axios";
 
-export type User = {
-  name: string;
-  phone: string;
-  email: string;
-  password: string;
-  user_type?: "admin" | "user";
-  department?: string;
-};
+import { User } from "../types";
 
 export const create = ({
   name,

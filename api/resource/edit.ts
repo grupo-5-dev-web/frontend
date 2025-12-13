@@ -1,5 +1,7 @@
 import axios from "axios";
-import { Resource } from "./create";
+
+import { getAuthToken } from "@/utils";
+import { Resource } from "../types";
 
 export const edit = ({
   name,
@@ -11,6 +13,11 @@ export const edit = ({
   image_url,
 }: Resource) => {
   const apiUrl = process.env.NEXT_PUBLIC_RESOURCE_API_URL;
+  const token = getAuthToken();
+
+  if (!token) {
+    throw new Error("Authentication token is missing");
+  }
 
   return axios
     .put(
@@ -25,7 +32,7 @@ export const edit = ({
         image_url,
       },
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${token}` },
       }
     )
     .then((response) => response.data)

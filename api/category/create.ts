@@ -1,17 +1,15 @@
-import { getAuthToken } from "@/utils";
 import axios from "axios";
 
-export type Category = {
-  name: string;
-  description: string;
-  type: "fisico" | "humano";
-  icon?: string;
-  color?: string;
-};
+import { getAuthToken } from "@/utils";
+import { Category } from "../types";
 
 export const create = ({ name, description, type, icon, color }: Category) => {
   const apiUrl = process.env.NEXT_PUBLIC_RESOURCE_API_URL;
   const token = getAuthToken();
+
+  if (!token) {
+    throw new Error("Authentication token is missing");
+  }
 
   return axios
     .post(

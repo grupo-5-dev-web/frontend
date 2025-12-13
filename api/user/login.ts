@@ -1,11 +1,7 @@
-import { setAuthToken } from "@/utils";
-
 import axios from "axios";
 
-export type Login = {
-  email: string;
-  password: string;
-};
+import { setAuthToken } from "@/utils";
+import { Login } from "../types";
 
 export const login = ({ email, password }: Login) => {
   const apiUrl = process.env.NEXT_PUBLIC_USER_API_URL;
